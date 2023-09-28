@@ -1,0 +1,11 @@
+Joshua Sinclair Chong
+
+1: Selection 
+
+It also doesn't stop until it's iterated fully; even if the array is sorted before then.
+
+2: Because it builds a sorted array index by index, so it doesn't need to look at indexes that are already sorted.
+
+3: It needs to have something to compare; whether with a variable in the class or overloading the comparison operators.
+
+4: 
