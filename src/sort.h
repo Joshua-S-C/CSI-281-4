@@ -1,4 +1,5 @@
-//
+//  Joshua Sinclair Chong
+// 
 //  sort.h
 //  
 //  Functions for bubble sort, selection sort, and insertion sort.
@@ -38,21 +39,42 @@ namespace csi281 {
     // using the bubble sort algorithm
     template <typename T>
     void bubbleSort(T array[], const int length) {
-        // YOUR CODE HERE
+        int i, j;
+        for (i = 0; i < length; i++) 
+            for (j = i; j < length; j++) 
+                if (array[i] > array[j]) swap(array[i], array[j]);
     }
     
     // Performs an in-place ascending sort of *array* of size *length*
     // using the selection sort algorithm
     template <typename T>
     void selectionSort(T array[], const int length) {
-        // YOUR CODE HERE
+        int i, j, minIndex;
+        for (i = 0; i < length; i++) {
+            minIndex = i;
+            for (j = i; j < length; j++)
+                if (array[j] < array[minIndex]) minIndex = j;
+            swap(array[minIndex], array[i]);
+        }
     }
     
     // Performs an in-place ascending sort of *array* of size *length*
     // using the insertion sort algorithm
     template <typename T>
     void insertionSort(T array[], const int length) {
-        // YOUR CODE HERE
+        int i, j;
+        T key;
+        for (i = 1; i < length; i++) {
+            key = array[i];
+            j = i - 1;
+
+            while (j >= 0 && array[j] > key) {
+                array[j + 1] = array[j];
+                j--;
+            }
+
+            array[j + 1] = key;
+        }
     }
 }
 
