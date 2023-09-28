@@ -1,11 +1,9 @@
 Joshua Sinclair Chong
 
-1: Selection 
+1: Selection sort only swaps in the outside loop. Bubble sort performs swaps during outside loop as well as inner loop. More swaps means Bubble Sort will be slower.
 
-It also doesn't stop until it's iterated fully; even if the array is sorted before then.
+2: Insertion sort doesn't iterate through entire array during the inner loop, while Selection sort does. So Insertion is checking less elements, and therefore is faster.
 
-2: Because it builds a sorted array index by index, so it doesn't need to look at indexes that are already sorted.
+3: It needs to have something to compare by overloading the < operator.
 
-3: It needs to have something to compare; whether with a variable in the class or overloading the comparison operators.
-
-4: 
+4: It probably sacrifices space for more speed. With more memory being used, the speed can be increased.
