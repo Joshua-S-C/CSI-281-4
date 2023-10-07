@@ -121,11 +121,9 @@ namespace csi281 {
     // Not recursive
     template <typename T>
     void insertionSort(T array[], const int start, const int end) {
-    // Sometimes faster than hybrid sort
-        int i;
+        int i, j;
+        T key;
         for (i = start; i <= end; i++) {
-            int j;
-            T key;
             key = array[i];
             j = i - 1;
 
@@ -149,7 +147,8 @@ namespace csi281 {
     template <typename T>
     void hybridSort(T array[], const int start, const int end) {
         // Base Case : Less than ten elements, call insertion sort
-        if ((end - start + 1) < 10) {
+        //int length = end - start + 1;
+;       if ((end - start + 1) < 10) {
             insertionSort(array, start, end);
             return;
         }
