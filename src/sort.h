@@ -1,9 +1,11 @@
-//  Joshua Sinclair Chong
-// 
+//
 //  sort.h
 //  
-//  Functions for bubble sort, selection sort, and insertion sort.
+//  Functions for merge sort, quicksort, and a hybrid sort.
 //  You SHOULD modify this file.
+//
+//  IMPORTANT NOTE: For this particular assignment you may not add
+//  any additional utility functions.
 //
 //  Copyright 2019 David Kopec
 //
@@ -29,42 +31,101 @@
 #ifndef sort_hpp
 #define sort_hpp
 
-#include <algorithm> // for swap()
+#include <algorithm> // for swap(), merge()
+#include <random>
 
 using namespace std;
 
 namespace csi281 {
     
-    // Performs an in-place ascending sort of *array* of size *length*
-    // using the bubble sort algorithm
+    // Performs an in-place ascending sort of *array*
+    // using the merge sort algorithm
+    // *start* is the first element of the array to start sorting from
+    // *end* is the end element for the elements to be sorted
+    // *end* will be the length of the array - 1 for a first run
+    // NOTE: Your solution MUST use std::inplace_merge
+    // http://www.cplusplus.com/reference/algorithm/inplace_merge/
     template <typename T>
-    void bubbleSort(T array[], const int length) {
-        int i, j;
-        for (i = 0; i < length; i++) 
-            for (j = i; j < length; j++) 
-                if (array[i] > array[j]) swap(array[i], array[j]);
+    void mergeSort(T array[], const int start, const int end) {
+        // Base Case
+        if ((end - start) < 1)
+            return;
+        
+        // Recursive Case
+        int mid = (start + end) / 2;
+        mergeSort(array, start, mid);   // First Half
+        mergeSort(array, mid+1, end);   // Second Half
+        std::inplace_merge(array+start, array + mid+1, array + end+1);
     }
     
-    // Performs an in-place ascending sort of *array* of size *length*
-    // using the selection sort algorithm
+    // setup random number generator
+    static random_device rd;
+    static mt19937 rng(rd());
+    // you can use uniform_int_distribution and rng to create
+    // a random int in a certain range
+    
+    // Performs an in-place ascending sort of *array*
+    // using the quicksort algorithm
+    // *start* is the first element of the array to start sorting from
+    // *end* is the end element for the elements to be sorted
+    // *end* will be the length of the array - 1 for a first run
+    // NOTE: Your solution should use std::swap
+    // http://www.cplusplus.com/reference/algorithm/swap/
+    // NOTE: Your solution MUST use a random pivot
+    // TIP: It may be helpful to swap the pivot to the end,
+    // sort the center of the range, and then move the pivot back to
+    // the appropriate place
     template <typename T>
-    void selectionSort(T array[], const int length) {
-        int i, j, minIndex;
-        for (i = 0; i < length; i++) {
-            minIndex = i;
-            for (j = i; j < length; j++)
-                if (array[j] < array[minIndex]) minIndex = j;
-            swap(array[minIndex], array[i]);
+    void quickSort(T array[], const int start, const int end) {
+        int i = start;
+        int j = end;
+
+        uniform_int_distribution<int> MinMax(start, end);
+        int randI = MinMax(rd);
+
+        //T pivot = array[(start + end) / 2];
+        T pivot = array[randI];
+
+        while(i <= j) {
+            while (array[i] < pivot)
+                i++;
+            
+            while (array[j] > pivot)
+                j--;
+
+            if (i <= j) {
+                swap(array[i], array[j]);
+                i++; 
+                j--;
+            }
         }
+
+        if (start < j)
+            quickSort(array, start, j);
+        if (i < end)
+            quickSort(array, i, end);
     }
     
-    // Performs an in-place ascending sort of *array* of size *length*
+    // Performs an in-place ascending sort of *array*
     // using the insertion sort algorithm
+    // *start* is the first element of the array to start sorting from
+    // *end* is the end element for the elements to be sorted
+    // *end* will be the length of the array - 1 for a first run
+    // NOTE: You can modify your old implementation from assignment 4
+    // OR if you believe yours was incorrect, email me and I will
+    // send you mine assuming you are done with assignment 4,
+    // but you will still need to modify it for this assignment
+    // as described below
+    // NOTE: You will need to modify the implementation to only
+    // sort part of the array as per the parameters of this version
+    // Not recursive
     template <typename T>
-    void insertionSort(T array[], const int length) {
-        int i, j;
-        T key;
-        for (i = 1; i < length; i++) {
+    void insertionSort(T array[], const int start, const int end) {
+    // Sometimes faster than hybrid sort
+        int i;
+        for (i = start; i <= end; i++) {
+            int j;
+            T key;
             key = array[i];
             j = i - 1;
 
@@ -75,6 +136,29 @@ namespace csi281 {
 
             array[j + 1] = key;
         }
+    }
+    
+    // Performs an in-place ascending sort of *array*
+    // using merge sort until there is less than 10 elements, and then
+    // the insertion sort algorithm
+    // *start* is the first element of the array to start sorting from
+    // *end* is the end element for the elements to be sorted
+    // *end* will be the length of the array - 1 for a first run
+    // TIP: You can copy your implementation of merge sort in here, and
+    // should be able to call the insertionSort above
+    template <typename T>
+    void hybridSort(T array[], const int start, const int end) {
+        // Base Case : Less than ten elements, call insertion sort
+        if ((end - start + 1) < 10) {
+            insertionSort(array, start, end);
+            return;
+        }
+
+        // Resursive 
+        int mid = (start + end) / 2;
+        hybridSort(array, start, mid);      // First Half
+        hybridSort(array, mid + 1, end);    // Second Half
+        std::inplace_merge(array + start, array + mid + 1, array + end + 1);
     }
 }
 
